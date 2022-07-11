@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
+
+//TODO 1.капа ХП 2. 2й герой   3.
 namespace Console_War
 {
     class Program{
         public static void Main(){
             List<Player> Team1 = new List<Player>(); 
             List<Player> Team2 = new List<Player>(); 
-
-            Player bot = new Player ("Бот",200,8); bot.PrintValues();
-            Player war = new Warior ("Варвар",125,8,50);war.PrintValues();
+            System.Console.WriteLine("Каждый ход случайно выбирается какая команда ходит первой. НАЖИМАТЬ то что предлагают!!!");
+            Player bot = new Player ("Бот",200,8); bot.PrintValues();//,new bool[1]{false}
+            Player war = new Warior ("Варвар",130,8,50);war.PrintValues();
             Player hill = new Healer ("Хилер",125,8,15);hill.PrintValues();
-            Player mage = new Mage ("Маг",110,10,30);mage.PrintValues();
-            Player Anduin = new Anduin ("Андуин", 300, 20, 50); Anduin.PrintValues();
+            Player mage = new Mage ("Маг",110,10,25);mage.PrintValues();
+            Player Uter = new Uter ("Утер", 300, 20, 50); Uter.PrintValues();
 
             Console.WriteLine(" Выберите размер 1й команды: ");
             int size = Convert.ToInt32 (Console.ReadLine());
@@ -37,11 +39,11 @@ namespace Console_War
                     switch (N)
                     {
                         case 0: Team.Add(new Player( "T"+ teamnumber+ "Бот"+i, 200, 8)); break;
-                        case 1: Team.Add(new Warior("T" + teamnumber + "Варвар"+i, 125, 8, 50)); break;
+                        case 1: Team.Add(new Warior("T" + teamnumber + "Варвар"+i, 130, 8, 50)); break;
                         case 2: Team.Add(new Healer("T" + teamnumber + "Хилер"+i, 125, 8, 15)); break;
-                        case 3: Team.Add(new Mage("T" + teamnumber + "Маг"+i, 110, 10, 30)); break;
+                        case 3: Team.Add(new Mage("T" + teamnumber + "Маг"+i, 110, 10, 25)); break;
                         
-                        case 4: Team.Add(new Anduin ("T" + teamnumber + " Андуин" , 300, 20, 50)); break;
+                        case 4: Team.Add(new Uter ("T" + teamnumber + "*Утер*" , 300, 20, 50)); break;
                     }
                 }
             }
@@ -54,9 +56,9 @@ namespace Console_War
                     switch (r.Next(0, 4))
                     {
                         case 0: Team.Add(new Player("T" + teamnumber + "Бот" + i, 200, 8)); break;
-                        case 1: Team.Add(new Warior("T" + teamnumber + "Варвар" + i, 125, 8, 50)); break;
+                        case 1: Team.Add(new Warior("T" + teamnumber + "Варвар" + i, 130, 8, 50)); break;
                         case 2: Team.Add(new Healer("T" + teamnumber + "Хилер" + i, 125, 8, 15)); break;
-                        case 3: Team.Add(new Mage("T" + teamnumber + "Маг" + i, 110, 10, 30)); break; 
+                        case 3: Team.Add(new Mage("T" + teamnumber + "Маг" + i, 110, 10, 25)); break; 
                     }
                 }
             }
@@ -93,41 +95,51 @@ namespace Console_War
             if (fighter == 4) fighter2 = mage;
             Team1.Add(bot);
             Team2.Add(mage);*/
-
+            int turn = 0;
             War(Team1, Team2);
 
             void War (List<Player> Team1, List<Player> Team2)
             {
-                Console.WriteLine("                     FIGHT!");
+                Console.WriteLine("                     FIGHT!"); 
+                
                 while (Team1.Count > 0 && Team2.Count > 0)
                 {
-                    Console.WriteLine(Team1.Count+"  /  "+ Team2.Count);
-                    foreach (Player F in Team1)
+                    turn++; Random r = new Random();
+                    Console.WriteLine(turn+"й ХОД              "+Team1.Count + "  /  " + Team2.Count);
+                    for (int i = 0; i < 10; i++)
                     {
-                        F.Step(Team1,Team2,F);
-                        
+                            foreach (Player F in Team1)
+                            {
+                                if(F.Speed == i)
+                                F.Step(Team1, Team2, F);
+                            }
+                            //System.Console.WriteLine(" *** ");
+                            foreach (Player F in Team2)
+                            {
+                                if (F.Speed == i)
+                                F.Step(Team2, Team1, F);
+                            }
                     }
-                    System.Console.WriteLine();
-                    foreach (Player F in Team2)
-                    {
-                        F.Step(Team2,Team1,F);
-                        
-                    }
+
+                    System.Console.WriteLine(Team1.Count + " " + Team2.Count);
                     System.Console.WriteLine();
                     System.Console.Write(" Текущее хп " + Team1[0].Name + ":" + Team1[0].Hp);
                     System.Console.WriteLine(" / Текущее хп " + Team2[0].Name + ":" + Team2[0].Hp);
 
-                    if (Team2[0].Hp <= 0) {
+                    /*if (Team2[0].Hp <= 0) {
                         System.Console.WriteLine(Team2[0].Name+" погиб");Team2.Remove(Team2[0]);
                     }
                     if (Team1[0].Hp <= 0) {
                         System.Console.WriteLine(Team1[0].Name+" погиб");Team1.Remove(Team1[0]);
-                    }
+                    }*/
                 }
-                Console.WriteLine(Team1.Count + "  /  " + Team2.Count);
-                if (Team1.Count <= 0 && Team2.Count > 0) System.Console.WriteLine(" Team2 WIN!!!");
-                if (Team2.Count <= 0 && Team1.Count > 0) System.Console.WriteLine(" Team1 WIN!!!");
-                if (Team1.Count <= 0 && Team2.Count  <= 0) System.Console.WriteLine("Ничья");
+                
+                
+                System.Console.WriteLine();
+                Console.WriteLine("                     "+Team1.Count + "  /  " + Team2.Count);
+                if (Team1.Count <= 0 && Team2.Count > 0) System.Console.WriteLine("                    Team2 WIN !!!");
+                if (Team2.Count <= 0 && Team1.Count > 0) System.Console.WriteLine("                    Team1 WIN !!!");
+                if (Team1.Count <= 0 && Team2.Count  <= 0) System.Console.WriteLine("                     Ничья");
             }
 
             /*void Fight(Player F1, Player F2){
@@ -146,5 +158,11 @@ namespace Console_War
             }*/
             Console.ReadKey();
         }
+        public static void Red(string warning)
+        {
+            Console.ForegroundColor = ConsoleColor.Red; // устанавливаем цвет
+            Console.Write(warning);
+            Console.ResetColor(); // сбрасываем в стандартный
+        } 
     }
 }            

@@ -20,7 +20,8 @@ namespace Console_War
         }
         public Healer(string name, int hp, int dmg, int heal)
         {
-            Name = name; Hp = hp; Dmg = dmg; Heal = heal;
+            Name = name; Hp = hp; Dmg = dmg; Heal = heal; Speed = 5;
+            System.Console.WriteLine(Name+" has been created");
         }
         public override void PrintValues()
         {
@@ -36,6 +37,7 @@ namespace Console_War
             //else
             if (Cdh >= 3) { Healing(Team1,F); Cdh = 0; }
             else F.Attack(F, Team2[0]);
+            if(Team2[0].Hp <=0){System.Console.Write($"{Team2[0].Name} #DEAD# / ");Team2.Remove(Team2[0]);}
             /*if (Wait && Cdb1 == 4)
             {
                 if (Cdh >= 3) { Healing(F); Cdh = 0; }

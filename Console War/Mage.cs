@@ -5,12 +5,10 @@ namespace Console_War
         private int krit;
         private int cd = 0;
         public int Cd {get;set;}
-        public int Krit {get;set;
-            //get{return this.krit;}
-            //set{this.krit = value ;}
-        } 
+        public int Krit {get;set;} 
         public Mage (string name, int hp, int dmg, int krit){
-            Name = name; Hp = hp; Dmg = dmg; Krit = krit;
+            Name = name; Hp = hp; Dmg = dmg; Krit = krit; Speed = 6;
+            System.Console.WriteLine(Name+" has been created");
         }
         public override void PrintValues()
         {
@@ -20,6 +18,7 @@ namespace Console_War
             Cd++;
             if(Cd == 3) {Aoe(Team2, F); Cd = 0;}
             else F.Attack(F,Team2[0]);
+            if(Team2[0].Hp <=0){System.Console.Write($"{Team2[0].Name} #DEAD# / ");Team2.Remove(Team2[0]);}
             
 
         }
