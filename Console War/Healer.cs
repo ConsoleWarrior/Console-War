@@ -18,8 +18,9 @@ namespace Console_War
         }
         public override void Step(List<Player> Team1, List<Player> Team2, Player F)
         {
-            foreach (byte el in F.timeStatus)
-            { F.timeStatus[el]--; }
+            for(int i=0;i<timeStatus.Length;i++){
+                timeStatus[i]--;
+            }
             Random rand = new Random();
             if (rand.Next(0, 100) < 33) { Healing(Team1,F);}
             else F.Attack(F, Team2[0], Team2);

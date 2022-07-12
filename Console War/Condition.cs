@@ -22,7 +22,7 @@ namespace Console_War{
         }*/
 
         public static int CheckAttackStatus(Player F, int uron) {
-
+            if(F.timeStatus[5] > 0) uron = uron + 10; //Rage
             return uron;
         }
 

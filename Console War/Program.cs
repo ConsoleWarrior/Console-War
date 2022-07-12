@@ -15,6 +15,7 @@ namespace Console_War
             Player hill = new Healer ("Хилер");hill.PrintValues();
             Player mage = new Mage ("Маг");mage.PrintValues();
             Player Uter = new Uter ("Утер"); Uter.PrintValues();
+            Player Silvana = new Silvana ("Сильвана"); Silvana.PrintValues();
 
             Console.WriteLine(" Выберите размер 1й команды: ");
             int size = Convert.ToInt32 (Console.ReadLine());
@@ -44,6 +45,7 @@ namespace Console_War
                         case 3: Team.Add(new Mage("T" + teamnumber + "Маг"+i)); break;
                         
                         case 4: Team.Add(new Uter ("T" + teamnumber + "*Утер*" )); break;
+                        case 5: Team.Add(new Silvana ("T" + teamnumber + "*Сильвана*" )); break;
                     }
                 }
             }

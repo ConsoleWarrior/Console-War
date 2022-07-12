@@ -15,8 +15,9 @@ namespace Console_War
             Console.WriteLine($"3 = моб {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed} +Фаербол в арьергард шанс 25%");
         }
         public override void Step(List<Player> Team1, List<Player> Team2, Player F){
-            foreach (byte el in F.timeStatus)
-            { F.timeStatus[el]--; }
+            for(int i=0;i<timeStatus.Length;i++){
+                timeStatus[i]--;
+            }
             Random rand = new Random();
             if(rand.Next(0,100)<25) Fireball(Team2, F);
             else F.Attack(F, Team2[0], Team2);

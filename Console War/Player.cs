@@ -11,7 +11,7 @@ namespace Console_War
         public byte timeRage = 0;
         public byte timeBubble = 0;
         public List<Condition.Status>  cond = new List<Condition.Status>();
-        public byte[] timeStatus = new byte[10];
+        public int[] timeStatus = new int[10];
                 
         public int Dmg {
             get{return this.dmg;}
@@ -40,13 +40,15 @@ namespace Console_War
         }
         public Player(){
             
-            foreach (byte el in timeStatus)
-            { el = 0; }
+            for(int i=0;i<timeStatus.Length;i++){
+                timeStatus[i]=0;
+            }
         }
         public Player(string name)
         {
-            foreach (byte el in timeStatus)
-            {timeStatus[el] = 0;}
+            for(int i=0;i<timeStatus.Length;i++){
+                timeStatus[i]=0;
+            }
             Name = name; Hp = 220; Dmg = 10;
             System.Console.WriteLine($"{Name} has been created");
         }
@@ -61,8 +63,9 @@ namespace Console_War
             Console.WriteLine($"0 = моб {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed}");
         }
         public virtual void Step(List<Player> Team1, List<Player> Team2, Player F){ //  STEP
-            foreach (byte el in F.timeStatus)
-            { F.timeStatus[el] --; }
+            for(int i=0;i<timeStatus.Length;i++){
+                timeStatus[i]--;
+            }
             F.Attack (F, Team2[0], Team2);
             //if(Team2[0].Hp <=0){Program.Red($"{Team2[0].Name} #DEAD#  /  ");Team2.Remove(Team2[0]);}
         }
