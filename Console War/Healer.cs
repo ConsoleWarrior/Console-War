@@ -4,68 +4,34 @@ namespace Console_War
     class Healer : Player
     {
         private int heal;
-        private int cdh = 0;
-        //private int cdb1 = 4;
-        //private int cdb2 = 3;
-        //private bool aktiv = false;
-        //public bool Aktiv { get; set; }
-        //public bool Wait = false;
-        //public int Cdb1 { get; set; }
-        //public int Cdb2 { get; set; }
-        public int Cdh { get; set; }
-        public int Heal
+        //private int cdh = 0;
+        //public int Cdh { get; set; }
+        public int Heal { get; set; }
+        public Healer(string name)
         {
-            get { return this.heal; }
-            set { this.heal = value; }
-        }
-        public Healer(string name, int hp, int dmg, int heal)
-        {
-            Name = name; Hp = hp; Dmg = dmg; Heal = heal; Speed = 5;
+            Name = name; Hp = 125; Dmg = 8; Krit = 5; Speed = 4; Heal = 20;
             System.Console.WriteLine(Name+" has been created");
         }
         public override void PrintValues()
         {
-            Console.WriteLine("2 Моб:" + Name + " Hp:" + Hp + " Dmg:" + Dmg + " Хил авангард каждый 3й ход:" + Heal);
+            Console.WriteLine($"2 = моб {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed} +Шанс 33% может похилить авангарда на {Heal}");
         }
         public override void Step(List<Player> Team1, List<Player> Team2, Player F)
         {
-            Cdh++; 
-            //Cdb1++;
-            //if (Aktiv) Cdb2--;
-            //if (Cdb2 == 0) { Aktiv = false; Cdb2 = 3; }
-            //if (Cdb1 == 5 && Cdb2 == 3) Bubble();
-            //else
-            if (Cdh >= 3) { Healing(Team1,F); Cdh = 0; }
-            else F.Attack(F, Team2[0]);
-            if(Team2[0].Hp <=0){System.Console.Write($"{Team2[0].Name} #DEAD# / ");Team2.Remove(Team2[0]);}
-            /*if (Wait && Cdb1 == 4)
-            {
-                if (Cdh >= 3) { Healing(F); Cdh = 0; }
-                else F.Attack(F, Team2[0]);
-            }*/
+            foreach (byte el in F.timeStatus)
+            { F.timeStatus[el]--; }
+            Random rand = new Random();
+            if (rand.Next(0, 100) < 33) { Healing(Team1,F);}
+            else F.Attack(F, Team2[0], Team2);
+            //if(Team2[0].Hp <=0){Program.Red($"{Team2[0].Name} #DEAD#  /  ");Team2.Remove(Team2[0]);}
         }
-        public override void Takedmg(Player A, Player B, int uron)
-        {
-            //if (Aktiv) uron = 0;
-            B.Hp = B.Hp - uron; System.Console.Write(B.Name + " получил:" + uron + " от " + A.Name + " / ");
-        }
+        // public override void Takedmg(Player A, Player B, int uron)
+        // {
+        //     B.Hp = B.Hp - uron; System.Console.Write($"{A.Name} нанес {uron} {B.Name}  /  "); if(B.Hp <= 0){Program.Red($"{B.Name} #DEAD# / ");Team2.Remove(B);Team1.Remove(B);}
+        // }
         public void Healing(List<Player> Team1,Player F)
         {
-            Team1[0].Hp = Team1[0].Hp + Heal; System.Console.Write(F.Name + " похилил " + Team1[0].Name+ " на " + Heal + " / ");
+            Team1[0].Hp = Team1[0].Hp + Heal; System.Console.Write(F.Name + " похилил " + Team1[0].Name+ " на " + Heal + "  /  ");
         }
-        /*public void Bubble()
-        {
-            System.Console.WriteLine("Врубить Бабл на 2 хода? 1 - да/ 2 - подождать");
-            if (Convert.ToInt32(Console.ReadLine()) == 1)
-            {
-                Cdb2--; Cdb1 = 0; Aktiv = true; System.Console.WriteLine("Bubble");
-            }
-            else
-            {
-                Cdb1 = 4;
-                Wait = true;
-            }
-        }*/
-                
     }
 }

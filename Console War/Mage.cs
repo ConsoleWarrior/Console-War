@@ -6,57 +6,46 @@ namespace Console_War
         private int cd = 0;
         public int Cd {get;set;}
         public int Krit {get;set;} 
-        public Mage (string name, int hp, int dmg, int krit){
-            Name = name; Hp = hp; Dmg = dmg; Krit = krit; Speed = 6;
+        public Mage (string name){
+            Name = name; Hp = 110; Dmg = 12; Krit = 20; Speed = 6;
             System.Console.WriteLine(Name+" has been created");
         }
         public override void PrintValues()
         {
-            Console.WriteLine("3 Моб:" + Name + " Hp:" + Hp + " Dmg:" + Dmg+" Krit chance:"+Krit+". Каждый третий ход AOE Fireball");
+            Console.WriteLine($"3 = моб {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed} +Фаербол в арьергард шанс 25%");
         }
         public override void Step(List<Player> Team1, List<Player> Team2, Player F){
-            Cd++;
-            if(Cd == 3) {Aoe(Team2, F); Cd = 0;}
-            else F.Attack(F,Team2[0]);
-            if(Team2[0].Hp <=0){System.Console.Write($"{Team2[0].Name} #DEAD# / ");Team2.Remove(Team2[0]);}
-            
-
+            foreach (byte el in F.timeStatus)
+            { F.timeStatus[el]--; }
+            Random rand = new Random();
+            if(rand.Next(0,100)<25) Fireball(Team2, F);
+            else F.Attack(F, Team2[0], Team2);
+            //if(Team2[0].Hp <=0){Program.Red($"{Team2[0].Name} #DEAD#  /  ");Team2.Remove(Team2[0]);}
         }
-        public override void Attack(Player A, Player B){
+        /*public override void Attack(Player A, Player B, List<Player> Team2){
             Random rand = new Random(); int uron = A.Dmg + rand.Next(-1,2);
             if (rand.Next(0,100)<Krit){
-            uron = (A.Dmg+rand.Next(-1, 2))*2; System.Console.Write(A.Name +" критует Dmgх2!"+" / ");
+                uron = (A.Dmg+rand.Next(-1, 2))*2; System.Console.Write("KRIT! ");
             }
-            //B.Hp = B.Hp - uron;
-            B.Takedmg (A, B, uron);
-            //System.Console.Write(A.Name +" нанес "+B.Name+":"+uron+" / ");
-        }
-        public override void Takedmg(Player A, Player B, int uron){
-            B.Hp = B.Hp - uron;System.Console.Write(B.Name+" получил:"+uron+" от "+A.Name +" / ");
-        }
-        public void Aoe(List<Player> Team,Player A){
-            System.Console.WriteLine(A.Name+" AOE Fireball!!!");
-            foreach(Player F in Team){
-                F.Takedmg(A, F, 15);
-            }
-            
-        }
-
-        /*public override int Step(Player F1){
-            
-            if(cd==3){
-
-            }
-            
-            
-            Random rand = new Random();
-            int uron = F1.Dmg + rand.Next(-1, 2); 
-            if (rand.Next(0,100)<Krit){
-            uron = (F1.Dmg+rand.Next(-1, 2))*2; System.Console.Write(Name +" критует Dmgх2!"+" / ");
-            }
-            System.Console.Write(Name +" нанес "+uron+" / ");
-            return uron; 
+            B.Takedmg (A, B, Team2, uron);
         }*/
-        
+        // public override void Takedmg(Player A, Player B, int uron){
+        //     B.Hp = B.Hp - uron; System.Console.Write($"{A.Name} нанес {uron} {B.Name}  /  "); if(B.Hp <= 0){Program.Red($"{B.Name} #DEAD# / ");Team2.Remove(B);}
+        // }
+        public void Fireball(List<Player> Team2, Player F){
+            Program.Blue(F.Name+" <FIREBALL>  /  "); int count = Team2.Count;
+            Team2[Team2.Count-1].Takedmg (F, Team2[Team2.Count-1], Team2, 30);
+            if (Team2.Count < count) Team2[Team2.Count - 1].Takedmg(F, Team2[Team2.Count - 1], Team2, 20);
+            else
+            if (Team2.Count >= 2) Team2[Team2.Count-2].Takedmg(F, Team2[Team2.Count-2], Team2, 20);
+            if (Team2.Count < count) Team2[Team2.Count - 2].Takedmg(F, Team2[Team2.Count - 2], Team2, 10);
+            else
+            if (Team2.Count >= 3) Team2[Team2.Count-3].Takedmg(F, Team2[Team2.Count-3], Team2, 10);
+           
+
+            /*foreach(Player F in Team2){
+                F.Takedmg(A, F, Team2, 15);
+            }*/
+        }
     }
 }        

@@ -2,16 +2,17 @@ using System;
 namespace Console_War
 {
     class Player{
-        
         private string name;
         private int hp;
         private int dmg;
+        private int krit = 5;
         private int speed = 7;
         private int statichp;
         public byte timeRage = 0;
         public byte timeBubble = 0;
         public List<Condition.Status>  cond = new List<Condition.Status>();
-        
+        public byte[] timeStatus = new byte[10];
+                
         public int Dmg {
             get{return this.dmg;}
             set{this.dmg = value;}
@@ -24,6 +25,11 @@ namespace Console_War
             get{return this.name;}
             set{this.name = value;}
         }
+        public int Krit
+        {
+            get { return this.krit; }
+            set { this.krit = value; }
+        }
         public int Speed {
             get { return this.speed; }
             set { this.speed = value; }
@@ -32,13 +38,16 @@ namespace Console_War
             get{return this.hp;}
             set{this.hp = value ;}
         }
-        public Player()
-        {
-            // System.Console.WriteLine(" Object has been created");
+        public Player(){
+            
+            foreach (byte el in timeStatus)
+            { el = 0; }
         }
-        public Player(string name, int hp, int dmg)
+        public Player(string name)
         {
-            Name = name; Hp = hp; Dmg = dmg; //Cond = cond;
+            foreach (byte el in timeStatus)
+            {timeStatus[el] = 0;}
+            Name = name; Hp = 220; Dmg = 10;
             System.Console.WriteLine($"{Name} has been created");
         }
         public void SetValues(string name, int hp, int dmg){
@@ -49,22 +58,25 @@ namespace Console_War
         }
         public virtual void PrintValues()
         {
-            Console.WriteLine("0 Моб:" + Name + " Hp:" + Hp + " Dmg:" + Dmg);
+            Console.WriteLine($"0 = моб {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed}");
         }
-        public virtual void Step(List<Player> Team1, List<Player> Team2, Player F){
-            
-            F.Attack(F,Team2[0]);
-            if(Team2[0].Hp <=0){Program.Red($"{Team2[0].Name} #DEAD# / ");Team2.Remove(Team2[0]);}
+        public virtual void Step(List<Player> Team1, List<Player> Team2, Player F){ //  STEP
+            foreach (byte el in F.timeStatus)
+            { F.timeStatus[el] --; }
+            F.Attack (F, Team2[0], Team2);
+            //if(Team2[0].Hp <=0){Program.Red($"{Team2[0].Name} #DEAD#  /  ");Team2.Remove(Team2[0]);}
         }
-        public virtual void Attack(Player A, Player B){
+        public virtual void Attack(Player A, Player B, List<Player> Team2){
             Random rand = new Random(); int uron = A.Dmg + rand.Next(-1,2);
-            //B.Hp = B.Hp - uron;
-            B.Takedmg (A, B, uron);
-            //System.Console.Write(A.Name +" нанес "+B.Name+":"+uron+" / ");
+            if (rand.Next(0, 100) < Krit)
+            {
+                uron = (A.Dmg + rand.Next(-1, 2)) * 2; System.Console.Write("KRIT! ");
+            }
+            B.Takedmg (A, B, Team2, uron);
         }
-        public virtual void Takedmg(Player A, Player B, int uron){
-            B.Hp = B.Hp - uron;System.Console.Write(B.Name+" получил:"+uron+" от "+A.Name +" / ");
+        public virtual void Takedmg(Player A, Player B, List<Player> Team2, int uron){
+            B.Hp = B.Hp - uron;System.Console.Write($"{A.Name} нанес {uron} {B.Name}  /  "); 
+            if(B.Hp <= 0){Program.Red($"{B.Name} #DEAD# / ");Team2.Remove(B);}
         }
-        
     }
 }            
