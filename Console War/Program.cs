@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-//TODO 1.капа ХП 2. 2й герой   3. Переделать статусы. 4.Добавить моба Лучник/дебафер
+//TODO 1.капа ХП 2. 2й герой   4.Добавить моба Лучник/дебафер
 //  
 namespace Console_War
 {
@@ -71,7 +71,7 @@ namespace Console_War
                 Console.WriteLine("                     FIGHT!"); 
                 while (Team1.Count > 0 && Team2.Count > 0)  // Основной цикл ходов
                 {
-                    turn++; Random r = new Random();
+                    turn++; Random r = new();
                     Console.WriteLine(turn+"й ХОД              "+Team1.Count + "  /  " + Team2.Count);
                     for (int i = 0; i < 10; i++)    // Цикл очередности хода
                     {

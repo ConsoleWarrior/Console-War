@@ -37,6 +37,7 @@ namespace Console_War
             for(int i=0;i<timeStatus.Length;i++){
                 timeStatus[i]--;
             }
+            Condition.CheckDotStatus(F, Team1);
             Cdh++; Cdb++;
             if(Cdb==5 && Wait){
                 System.Console.Write("<BUBBLE> на 2 хода? 1 - да 2 - ждать  /  ");
@@ -87,7 +88,40 @@ namespace Console_War
         }
         public override void PrintValues()
         {
-            Console.WriteLine($"5 = герой {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed} ");
-        }    
+            Console.WriteLine($"5 = герой {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed} +Вешает на 3 цели кровотечение");
+        }
+        public override void Step(List<Player> Team1, List<Player> Team2, Player F)
+        { 
+            for (int i = 0; i < timeStatus.Length; i++)
+            {
+                timeStatus[i]--;
+            }
+            Condition.CheckDotStatus(F, Team1);
+            Random rand = new();
+            if (rand.Next(0, 100) < 25) Piercing(Team2, F);
+            else F.Attack(F, Team2[0], Team2);
+            
+        }
+        public override void Attack(Player A, Player B, List<Player> Team2)
+        {
+            Random rand = new(); int uron = A.Dmg + rand.Next(-1, 2);
+            uron = Condition.CheckAttackStatus(A, uron);
+            if (rand.Next(0, 100) < Krit)
+            {
+                uron = (A.Dmg + rand.Next(-1, 2)) * 2; System.Console.Write(Krit + "KRIT! ");
+            }
+            B.Takedmg(A, B, Team2, uron); B.timeStatus[3] = 3;
+        }
+        public static void Piercing(List<Player> Team2, Player F)
+        {
+            Program.Blue(F.Name + " <PIERCING>  /  "); int count = Team2.Count;
+            Team2[0].Takedmg(F, Team2[0], Team2, 30); Team2[0].timeStatus[3] = 3;
+            if (Team2.Count < count && Team2.Count > 0) { Team2[0].Takedmg(F, Team2[0], Team2, 20); Team2[0].timeStatus[3] = 3; }
+            else
+            if (Team2.Count >= 2) { Team2[1].Takedmg(F, Team2[1], Team2, 20); Team2[1].timeStatus[3] = 3; }
+            if (Team2.Count < count && Team2.Count > 1) { Team2[1].Takedmg(F, Team2[1], Team2, 10); Team2[1].timeStatus[3] = 3; }
+            else
+            if (Team2.Count >= 3) { Team2[2].Takedmg(F, Team2[2], Team2, 10); Team2[2].timeStatus[3] = 3; }
+        }
     }
 }

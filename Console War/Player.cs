@@ -10,7 +10,6 @@ namespace Console_War
         private int statichp;
         public byte timeRage = 0;
         public byte timeBubble = 0;
-        public List<Condition.Status>  cond = new List<Condition.Status>();
         public int[] timeStatus = new int[10];
                 
         public int Dmg {
@@ -66,11 +65,14 @@ namespace Console_War
             for(int i=0;i<timeStatus.Length;i++){
                 timeStatus[i]--;
             }
+            if (!Condition.CheckDotStatus(F, Team1)) 
             F.Attack (F, Team2[0], Team2);
-            //if(Team2[0].Hp <=0){Program.Red($"{Team2[0].Name} #DEAD#  /  ");Team2.Remove(Team2[0]);}
+            else Team1.Remove(F);//////////////////////
+
         }
         public virtual void Attack(Player A, Player B, List<Player> Team2){
-            Random rand = new Random(); int uron = A.Dmg + rand.Next(-1,2);
+            Random rand = new (); int uron = A.Dmg + rand.Next(-1,2);
+            uron = Condition.CheckAttackStatus(A, uron);
             if (rand.Next(0, 100) < Krit)
             {
                 uron = (A.Dmg + rand.Next(-1, 2)) * 2; System.Console.Write("KRIT! ");
@@ -78,8 +80,10 @@ namespace Console_War
             B.Takedmg (A, B, Team2, uron);
         }
         public virtual void Takedmg(Player A, Player B, List<Player> Team2, int uron){
+            uron = Condition.CheckTakedmgStatus(B, uron);
             B.Hp = B.Hp - uron;System.Console.Write($"{A.Name} нанес {uron} {B.Name}  /  "); 
             if(B.Hp <= 0){Program.Red($"{B.Name} #DEAD# / ");Team2.Remove(B);}
         }
+        
     }
 }            
