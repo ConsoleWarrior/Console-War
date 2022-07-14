@@ -4,7 +4,7 @@ namespace Console_War
     class Warior : Player {
         int CdR = 0;
         public Warior (string name){
-            Name = name; Hp = 140; Dmg = 10; Krit = 50; Speed = 5;
+            Name = name; Hp = 140; Dmg = 10; Krit = 30; Speed = 5;
             System.Console.WriteLine(Name+" has been created");
         }
         public override void PrintValues()
@@ -15,13 +15,16 @@ namespace Console_War
             for(int i=0;i<timeStatus.Length;i++){
                 timeStatus[i]--;
             }
-            Condition.CheckDotStatus(F, Team1);
-            CdR++;
-            if (CdR == 4) {
-                F.timeStatus[5] = 2; Program.Blue($"{F.Name} <RAGE> ");CdR = 0;
+            if (!Condition.CheckDotStatus(F, Team1))
+            {
+                CdR++;
+                if (CdR == 4)
+                {
+                    F.timeStatus[5] = 2; Program.Blue($"{F.Name} <RAGE> "); CdR = 0;
+                }
+                F.Attack(F, Team2[0], Team2);
             }
-                        
-            F.Attack(F,Team2[0], Team2);
+            else Team1.Remove(F);
         }
     }
 }        

@@ -23,10 +23,13 @@ namespace Console_War
             for(int i=0;i<timeStatus.Length;i++){
                 timeStatus[i]--;
             }
-            Condition.CheckDotStatus(F, Team1);
-            Random rand = new();
-            if (rand.Next(0, 100) < 33) { Healing(Team1,F);}
-            else F.Attack(F, Team2[0], Team2);
+            if (!Condition.CheckDotStatus(F, Team1))
+            {
+                Random rand = new();
+                if (rand.Next(0, 100) < 33) { Healing(Team1, F); }
+                else F.Attack(F, Team2[0], Team2);
+            }
+            else Team1.Remove(F);
         }
         
         public void Healing(List<Player> Team1,Player F)

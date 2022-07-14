@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-//TODO 1.капа ХП 2. 2й герой   4.Добавить моба Лучник/дебафер
+//TODO 1.капа ХП 4.Добавить моба Лучник/дебафер
 //  
 namespace Console_War
 {
@@ -16,6 +16,7 @@ namespace Console_War
             Player mage = new Mage ("Маг");mage.PrintValues();
             Player Uter = new Uter ("Утер"); Uter.PrintValues();
             Player Silvana = new Silvana ("Сильвана"); Silvana.PrintValues();
+            Player Boss = new Boss("Валира"); Boss.PrintValues();
 
             Console.WriteLine(" Выберите размер 1й команды: ");
             int size = Convert.ToInt32 (Console.ReadLine());
@@ -44,8 +45,9 @@ namespace Console_War
                         case 2: Team.Add(new Healer("T" + teamnumber + "Хилер"+i)); break;
                         case 3: Team.Add(new Mage("T" + teamnumber + "Маг"+i)); break;
                         
-                        case 4: Team.Add(new Uter ("T" + teamnumber + "*Утер*" )); break;
-                        case 5: Team.Add(new Silvana ("T" + teamnumber + "*Сильвана*" )); break;
+                        case 4: Team.Add(new Uter ("T" + teamnumber + "*Утер*"+i)); break;
+                        case 5: Team.Add(new Silvana ("T" + teamnumber + "*Сильвана*"+i)); break;
+                        case 9: Team.Add(new Boss("T" + teamnumber + "*VALIRA*")); break;
                     }
                 }
             }
@@ -68,22 +70,22 @@ namespace Console_War
 
             void War (List<Player> Team1, List<Player> Team2)
             {
-                Console.WriteLine("                     FIGHT!"); 
+               Console.WriteLine("                     FIGHT!"); 
                 while (Team1.Count > 0 && Team2.Count > 0)  // Основной цикл ходов
                 {
                     turn++; Random r = new();
                     Console.WriteLine(turn+"й ХОД              "+Team1.Count + "  /  " + Team2.Count);
-                    for (int i = 0; i < 10; i++)    // Цикл очередности хода
+                    for (int i = 0; i < 10; i++)    // Цикл скоростей
                     {
                         try {
-                            if (r.Next(0, 2) == 1)
+                            if (r.Next(0, 2) == 1) // Какая команда ходит первой
                             {
-                                foreach (Player F in Team1)
+                                foreach (Player F in Team1.ToArray())
                                 {
                                     if (F.Speed == i)
                                         F.Step(Team1, Team2, F);
                                 }
-                                foreach (Player F in Team2)
+                                foreach (Player F in Team2.ToArray())
                                 {
                                     if (F.Speed == i)
                                         F.Step(Team2, Team1, F);
@@ -91,12 +93,12 @@ namespace Console_War
                             }
                             else
                             {
-                                foreach (Player F in Team2)
+                                foreach (Player F in Team2.ToArray())
                                 {
                                     if (F.Speed == i)
                                         F.Step(Team2, Team1, F);
                                 }
-                                foreach (Player F in Team1)
+                                foreach (Player F in Team1.ToArray())
                                 {
                                     if (F.Speed == i)
                                         F.Step(Team1, Team2, F);

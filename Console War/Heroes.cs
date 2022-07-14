@@ -13,11 +13,9 @@ namespace Console_War
     class Uter : Heroes
     {
         private int heal;
-        private int cdh = 0;
-        private int cdb = 4;
-        public bool Wait = true;
-        public int Cdb { get; set; }
-        public int Cdh { get; set; }
+        private int Cdh = 0;
+        private int Cdb = 4;
+        private bool Wait = true;
         public int Heal
         {
             get { return this.heal; }
@@ -37,33 +35,27 @@ namespace Console_War
             for(int i=0;i<timeStatus.Length;i++){
                 timeStatus[i]--;
             }
-            Condition.CheckDotStatus(F, Team1);
-            Cdh++; Cdb++;
-            if(Cdb==5 && Wait){
-                System.Console.Write("<BUBBLE> на 2 хода? 1 - да 2 - ждать  /  ");
-                if (Convert.ToInt32(Console.ReadLine()) == 1)
-                    {/*F.cond.Add (Condition.Bubble);*/
-                    F.timeStatus[0] = 2; Program.Blue($"*{F.Name}*<BUBBLE>");
-                    Cdb = 0;Wait = false;}
-                else {Wait = true;Cdb=4;
-                    if (Cdh >= 3) { Healing(Team1,F); Cdh = 0; }
-                    else {F.Attack(F, Team2[0],Team2);//if(Team2[0].Hp <=0){Program.Red($"{Team2[0].Name} #DEAD#  /  ");Team2.Remove(Team2[0]);}
-                    }}}
-            else {Wait = true;
-                if (Cdh >= 3) { Healing(Team1,F); Cdh = 0; }
-                    else {F.Attack(F, Team2[0],Team2);//if(Team2[0].Hp <=0){ Program.Red($"{Team2[0].Name} #DEAD#  /  "); Team2.Remove(Team2[0]);}
-                    }}
-            // try{
-            //     foreach(Condition.Status aktivstatus in F.cond){ 
-            //         if (aktivstatus(F)==false) F.cond.Remove(aktivstatus);
-            //     }
-            // }catch {}
-            
+            if (!Condition.CheckDotStatus(F, Team1)){
+                Cdh++; Cdb++;
+                if (Cdb == 5 && Wait) {
+                    System.Console.Write("<BUBBLE> на 2 хода? 1 - да 2 - ждать  /  ");
+                    if (Convert.ToInt32(Console.ReadLine()) == 1)
+                    {
+                        F.timeStatus[0] = 2; Program.Blue($"*{F.Name}*<BUBBLE>");
+                        Cdb = 0; Wait = false; }
+                    else { Wait = true; Cdb = 4;
+                        if (Cdh >= 3) { Healing(Team1, F); Cdh = 0; }
+                        else { F.Attack(F, Team2[0], Team2);
+                        } } }
+                else { Wait = true;
+                    if (Cdh >= 3) { Healing(Team1, F); Cdh = 0; }
+                    else { F.Attack(F, Team2[0], Team2);
+                    } }
+            } else Team1.Remove(F);
         }
         public override void Takedmg(Player A, Player B, List<Player> Team2, int uron)
         {
             uron = Condition.CheckTakedmgStatus(B, uron);
-            //if (timeBubble>0) uron = 0;
             B.Hp = B.Hp - uron; System.Console.Write($"{A.Name} нанес {uron} {B.Name}  /  "); if(B.Hp <= 0){Program.Red($"{B.Name} #DEAD# / ");Team2.Remove(B);}
         }
         public void Healing(List<Player> Team1,Player F)
@@ -80,7 +72,7 @@ namespace Console_War
     }    
     class Silvana : Heroes
     {
-        public bool Wait = true;
+        private bool Wait = true;
         public Silvana(string name)
         {
             Name = name; Hp = 300; Dmg = 20; Krit = 30; Speed = 1;
@@ -88,7 +80,7 @@ namespace Console_War
         }
         public override void PrintValues()
         {
-            Console.WriteLine($"5 = герой {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed} +Вешает на 3 цели кровотечение");
+            Console.WriteLine($"5 = герой {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed} +Шанс 33% пробить 3х передних с кровотечением");
         }
         public override void Step(List<Player> Team1, List<Player> Team2, Player F)
         { 
@@ -96,11 +88,12 @@ namespace Console_War
             {
                 timeStatus[i]--;
             }
-            Condition.CheckDotStatus(F, Team1);
-            Random rand = new();
-            if (rand.Next(0, 100) < 25) Piercing(Team2, F);
-            else F.Attack(F, Team2[0], Team2);
-            
+            if (!Condition.CheckDotStatus(F, Team1)){
+                Random rand = new();
+                if (rand.Next(0, 100) < 33) Piercing(Team2, F);
+                else F.Attack(F, Team2[0], Team2); }
+            else Team1.Remove(F);
+
         }
         public override void Attack(Player A, Player B, List<Player> Team2)
         {

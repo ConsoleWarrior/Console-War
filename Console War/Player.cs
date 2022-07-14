@@ -48,7 +48,7 @@ namespace Console_War
             for(int i=0;i<timeStatus.Length;i++){
                 timeStatus[i]=0;
             }
-            Name = name; Hp = 220; Dmg = 10;
+            Name = name; Hp = 230; Dmg = 10;
             System.Console.WriteLine($"{Name} has been created");
         }
         public void SetValues(string name, int hp, int dmg){
@@ -61,23 +61,23 @@ namespace Console_War
         {
             Console.WriteLine($"0 = моб {Name} Hp:{Hp} Dmg:{Dmg} Krit chance:{Krit}% Speed:{Speed}");
         }
-        public virtual void Step(List<Player> Team1, List<Player> Team2, Player F){ //  STEP
-            for(int i=0;i<timeStatus.Length;i++){
+        public virtual void Step(List<Player> Team1, List<Player> Team2, Player F) { //  STEP
+            for (int i = 0; i < timeStatus.Length; i++) {
                 timeStatus[i]--;
             }
-            if (!Condition.CheckDotStatus(F, Team1)) 
-            F.Attack (F, Team2[0], Team2);
+            if (!Condition.CheckDotStatus(F, Team1)) { 
+            /*if (Team2.Count > 0) */F.Attack(F, Team2[0], Team2); }
             else Team1.Remove(F);//////////////////////
 
         }
         public virtual void Attack(Player A, Player B, List<Player> Team2){
-            Random rand = new (); int uron = A.Dmg + rand.Next(-1,2);
-            uron = Condition.CheckAttackStatus(A, uron);
+            Random rand = new (); int uron = Dmg + rand.Next(-1,2);
+            uron = Condition.CheckAttackStatus(this, uron);
             if (rand.Next(0, 100) < Krit)
             {
-                uron = (A.Dmg + rand.Next(-1, 2)) * 2; System.Console.Write("KRIT! ");
+                uron *= 2; System.Console.Write("KRIT! ");
             }
-            B.Takedmg (A, B, Team2, uron);
+            B.Takedmg (this, B, Team2, uron);
         }
         public virtual void Takedmg(Player A, Player B, List<Player> Team2, int uron){
             uron = Condition.CheckTakedmgStatus(B, uron);

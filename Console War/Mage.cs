@@ -11,7 +11,7 @@ namespace Console_War
         }
 
         public Mage (string name){
-            Name = name; Hp = 110; Dmg = 12; Krit = 20; Speed = 6;
+            Name = name; Hp = 110; Dmg = 12; Krit = 20; Speed = 5;
             System.Console.WriteLine(Name+" has been created");
         }
         public override void PrintValues()
@@ -22,10 +22,13 @@ namespace Console_War
             for(int i=0;i<timeStatus.Length;i++){
                 timeStatus[i]--;
             }
-            Condition.CheckDotStatus(F, Team1);
-            Random rand = new();
-            if(rand.Next(0,100)<25) Fireball(Team2, F);
-            else F.Attack(F, Team2[0], Team2);
+            if (!Condition.CheckDotStatus(F, Team1))
+            {
+                Random rand = new();
+                if (rand.Next(0, 100) < 25) Fireball(Team2, F);
+                else F.Attack(F, Team2[0], Team2);
+            }
+            else Team1.Remove(F);
         }
 
         public static void Fireball(List<Player> Team2, Player F){
